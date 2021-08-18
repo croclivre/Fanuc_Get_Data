@@ -21,7 +21,7 @@ def robot_url_pointer(adress):
         new_strings.append(new_string)  
 
         new_strings1 = []
-    print(string)    
+      
     for string in new_strings:
         new_string1 = string.replace("  '", ",")
         new_strings1.append(new_string1)  
