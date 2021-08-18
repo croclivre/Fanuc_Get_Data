@@ -8,10 +8,10 @@ Quick hack to get the registry or other data from the Fanuc robots with python
   like taking the production data from the robots registry by hand day after day.
 
   So I wanted to get data from the robot without having an acces to roboguide and the Karel language.
-  So the whole idea his to use the webpage of the robot 'http://xxx.xxx.xxx.xxx/MD/NUMREG.VA' and parse it with BeautifulSoup
-  Reframe that data and then export it to a SQL database.
+  So the whole idea his to use the webpage of the robot 'http://xxx.xxx.xxx.xxx/MD/NUMREG.VA' and parse it with BeautifulSoup,
+  reframe the data and then export it to a SQL database.
 
-  With multiple robots in the shop, I want to create a main code with subprocess, this code is intended to be a subprocess only.
+  With multiple robots in the shop, I wanted to create a subproce, in which I just only have to import the code and add the parameter, this code is intended to be a subprocess only, but I'm pretty sure that it isn't program to do that
   
   The way I reset the production data is with an MQTT broker, I send a command to a ESP32 boards which he activate a solid state relay so that the robot reset it's 
   registry and then doesn't have to handle the realtime
