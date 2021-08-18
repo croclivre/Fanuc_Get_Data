@@ -1,0 +1,52 @@
+import pandas as pd
+from bs4 import BeautifulSoup
+import urllib.request
+import datetime
+import sqlite3
+import sys
+
+def robot_url_pointer(adress):
+    response = urllib.request.urlopen(adress)
+    html = response.read()
+    soup = BeautifulSoup(html,features="html.parser")
+    pre = soup.find_all('pre')
+    table = soup.find("pre").find(text=True)
+    datasplit = table.split("\n")
+   
+    #rework the data string into a standard format and slipt the column
+    new_strings = []
+
+    for string in datasplit:
+        new_string = string.replace(" = ", ",")
+        new_strings.append(new_string)  
+
+        new_strings1 = []
+    print(string)    
+    for string in new_strings:
+        new_string1 = string.replace("  '", ",")
+        new_strings1.append(new_string1)  
+
+
+    df = pd.DataFrame({'NumReg' : new_strings1})
+    df = pd.DataFrame(df.NumReg.str.split(',',None).tolist(),columns = ['NumReg','Valeurs','Comment'])
+    df=df.reindex(columns=['NumReg','Comment','Valeurs'])
+    df = df.iloc[1:]
+    return(df)
+
+#define a function in which we get data
+def choose_data_list(start,end):
+    df1 = df.iloc[start:end]
+    maintenant = datetime.datetime.now()
+    nom_colonne = str(maintenant.strftime("%d"))+"_"+str(maintenant.strftime("%m"))+"_"+str(maintenant.strftime("%Y"))+"_"+str(maintenant.strftime("%H"))+"h"+str(maintenant.strftime("%M"))
+    df2 = df1.loc[start:end,'Valeurs']
+    df2 = df2.to_frame()
+    df2 = df2.rename(columns = {'Valeurs' : nom_colonne})
+    return(df2)
+
+if __name__ == '__main__':
+            
+    df = robot_url_pointer(sys.argv[1])
+    parameter1 = int(sys.argv[2])
+    parameter2 = int(sys.argv[3])
+    df2 = choose_data_list(parameter1,parameter2)
+    print(df2)
