@@ -3,6 +3,7 @@ from bs4 import BeautifulSoup
 import urllib.request
 import datetime
 
+#Adress should be like 'http://xxx.xxx.xxx.xxx/MD/NUMREG.VA' 
 
 def robot_url_pointer(adress,start,end,choice):
     
