@@ -1,0 +1,34 @@
+from influxdb_client import InfluxDBClient, Point, WritePrecision
+from influxdb_client.client.write_api import SYNCHRONOUS
+from fanuc_get_data import *
+
+robot_adress = 'http://xxx.xxx.xxx.xxx/MD/NUMREG.VA'
+start_range = 1
+end_range = 6
+
+#...........................................,starting range, end of the range, 
+#"COLUMN_NAME" -> you gonna have the list of the column name you chose in your range
+#"REG" ->  you gonna have the list of the register values you chose in your range
+column_name = robot_url_pointer(robot_adress,start_range,end_range,"COLUMN_NAME")
+register = robot_url_pointer(robot_adress,start_range,end_range,"REG")
+
+#Let's build the framework to write the data to influx db
+len_list = len(register)
+publish_list = [None]*len_list
+
+for x in range(len_list):
+    publish_list[x] = "mem,host=host1 " + column_name[x] + "=" + str(register[x])
+    #print(publish_list[x])
+    
+# You can generate a Token from the "Tokens Tab" in the UI
+token = "get it from UI"
+org = "create it from influx db"
+bucket = "create it from influx db"
+
+client = InfluxDBClient(url="http://localhost:8086", token=token)
+
+write_api = client.write_api(write_options=SYNCHRONOUS)
+
+#we send a list that looks like that, we pre-build it
+#publish_list = ["mem,host=host1 used_percent=23.43234543","mem,host=host1 available_percent=15.856523"]
+write_api.write(bucket, org, publish_list)
